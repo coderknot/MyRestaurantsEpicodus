@@ -1,10 +1,12 @@
-package com.example.guest.myrestaurants;
+package com.example.guest.myrestaurants.services;
 
-import android.util.Log;
+import com.example.guest.myrestaurants.Constants;
+import com.example.guest.myrestaurants.models.Restaurant;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -19,9 +21,8 @@ import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
 public class YelpService {
 
-    public static final String TAG = YelpService.class.getSimpleName();
-
     public static void findRestaurants(String location, Callback callback) {
+
         OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(Constants.YELP_CONSUMER_KEY, Constants.YELP_CONSUMER_SECRET);
         consumer.setTokenWithSecret(Constants.YELP_TOKEN, Constants.YELP_TOKEN_SECRET);
 
@@ -32,9 +33,8 @@ public class YelpService {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_BASE_URL).newBuilder();
         urlBuilder.addQueryParameter(Constants.YELP_LOCATION_QUERY_PARAMETER, location);
         String url = urlBuilder.build().toString();
-        Log.v(TAG, url);
 
-        Request request = new Request.Builder()
+        Request request= new Request.Builder()
                 .url(url)
                 .build();
 
@@ -74,8 +74,7 @@ public class YelpService {
                     for (int y = 0; y < categoriesJSON.length(); y++) {
                         categories.add(categoriesJSON.getJSONArray(y).get(0).toString());
                     }
-                    Restaurant restaurant = new Restaurant(name, phone, website, rating,
-                            imageUrl, address, latitude, longitude, categories);
+                    Restaurant restaurant = new Restaurant(name, phone, website, rating, imageUrl, address, latitude, longitude, categories);
                     restaurants.add(restaurant);
                 }
             }
@@ -86,4 +85,6 @@ public class YelpService {
         }
         return restaurants;
     }
+
+
 }
